@@ -3,6 +3,14 @@
 # 
 # devtools::install_github("rmcelreath/rethinking")
 library(dplyr)
+
+stringDiff <- function(x,y){
+  xs <- strsplit(x,'')[[1]]
+  ys <- strsplit(y,'')[[1]]
+  diff <- setdiff(ys,xs)
+  ifelse(x==y,"none",diff)
+}
+
 cols <- c("SUBJECT","ANSWER","RESP","C1C2","CL_ONS","LEXICAL","LIQUID","POSITION","Running","TARGET","TYPE","VOWEL","CHOICE1","CHOICE2","CHOICE3","CHOICE4","CHOICE5")
 
 CNT <- read.csv("CNT_ALL.csv")[,cols]
@@ -24,7 +32,14 @@ liquidsAll <- liquidsAll %>% filter(TARGET%in%c("control","target")) %>%
                                 ifelse(RESP==3,as.character(CHOICE3),
                                        ifelse(RESP==4,as.character(CHOICE4),
                                               ifelse(RESP==5,as.character(CHOICE5),NA)))))) %>%
-  mutate(change=stringDiff(correct,choice))
+  mutate(change=ifelse(is.na(choice),NA,stringDiff(correct,choice)))
 
 liquidsL <- liquidsAll %>% filter(LIQUID=="L")
 liquidsR <- liquidsAll %>% filter(LIQUID=="R")
+
+stringDiff <- function(x,y){
+    xs <- strsplit(x,'')[[1]]
+    ys <- strsplit(y,'')[[1]]
+    diffs <-  xs == ys
+    return(ys[!diffs])
+}
