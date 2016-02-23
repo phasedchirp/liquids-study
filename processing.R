@@ -1,45 +1,43 @@
-# install.packages(c("coda","mvtnorm","devtools"))
-# library(devtools)
-# 
-# devtools::install_github("rmcelreath/rethinking")
-library(dplyr)
-
-stringDiff <- function(x,y){
-  xs <- strsplit(x,'')[[1]]
-  ys <- strsplit(y,'')[[1]]
-  diff <- setdiff(ys,xs)
-  ifelse(x==y,"none",diff)
+# Check for required packages, if not, run setup:
+is.installed <- function(mypkg) is.element(mypkg, installed.packages()[,1])
+if(!is.installed(rethinking)){
+  deps <- c("coda","mvtnorm","devtools")
+  if(!all(is.installed(deps))){
+    install.packages(deps[-is.installed(deps)])
+    devtools::install_github("rmcelreath/rethinking")
+  }
 }
 
-cols <- c("SUBJECT","ANSWER","RESP","C1C2","CL_ONS","LEXICAL","LIQUID","POSITION","Running","TARGET","TYPE","VOWEL","CHOICE1","CHOICE2","CHOICE3","CHOICE4","CHOICE5")
+library(dplyr)
 
-CNT <- read.csv("CNT_ALL.csv")[,cols]
+
+cols_err <- c("SUBJECT","ANSWER","RESP","C1C2","CL_ONS","LEXICAL","LIQUID","POSITION","Running","TARGET","TYPE","VOWEL","CHOICE1","CHOICE2","CHOICE3","CHOICE4","CHOICE5")
+cols_cor <- c("SUBJECT","ANSWER","RESP","C1C2","CL_ONS","LEXICAL","LIQUID","POSITION","Running","TARGET","TYPE","VOWEL","CHOICE1","CHOICE2","CHOICE3","CHOICE4","CHOICE5")
+
+CNT_sg_err <- read.csv("CNT_ERR_SG.csv")[,cols_err]
+CNT_sg_cor <- read.csv("CNT_ERR_SG.csv")[,cols_cor]
+CNT_sg_cor$choice <- CNT_sg_cor$choice %>% as.character %>% tolower %>% as.factor
+CNT <- rbind(CNT_sg_err,CNT_sg_cor)
 CNT$lang <- "Cantonese"
-MAN <- read.csv("MAN_ALL.csv")[,cols]
+
+CNT_sg_err <- read.csv("CNT_ERR_SG.csv")[,cols_err]
+CNT_sg_cor <- read.csv("CNT_ERR_SG.csv")[,cols_cor]
+CNT_sg_cor$choice <- CNT_sg_cor$choice %>% as.character %>% as.factor
+CNT <- rbind(CNT_sg_err,CNT_sg_cor)
 MAN$lang <- "Mandarin"
 
 liquidsAll <- rbind(CNT,MAN)
 liquidsAll$lang <- as.factor(liquidsAll$lang)
 
-liquidsAll <- liquidsAll %>% filter(TARGET%in%c("control","target")) %>%
-  mutate(correct = ifelse(ANSWER==1,as.character(CHOICE1),
-                          ifelse(ANSWER==2,as.character(CHOICE2),
-                                 ifelse(ANSWER==3,as.character(CHOICE3),
-                                        ifelse(ANSWER==4,as.character(CHOICE4),
-                                               ifelse(ANSWER==5,as.character(CHOICE5),NA))))),
-         choice = ifelse(RESP==1,as.character(CHOICE1),
-                         ifelse(RESP==2,as.character(CHOICE2),
-                                ifelse(RESP==3,as.character(CHOICE3),
-                                       ifelse(RESP==4,as.character(CHOICE4),
-                                              ifelse(RESP==5,as.character(CHOICE5),NA)))))) %>%
-  mutate(change=ifelse(is.na(choice),NA,stringDiff(correct,choice)))
+liquidsAll <- liquidsAll %>% filter(TARGET%in%c("control","target"))
 
 liquidsL <- liquidsAll %>% filter(LIQUID=="L")
 liquidsR <- liquidsAll %>% filter(LIQUID=="R")
 
-stringDiff <- function(x,y){
-    xs <- strsplit(x,'')[[1]]
-    ys <- strsplit(y,'')[[1]]
-    diffs <-  xs == ys
-    return(ys[!diffs])
-}
+
+# stringDiff <- function(x,y){
+#   xs <- strsplit(x,'')[[1]]
+#   ys <- strsplit(y,'')[[1]]
+#   diff <- setdiff(ys,xs)
+#   ifelse(x==y,"none",diff)
+# }
