@@ -34,11 +34,25 @@ liquidsAll$CHOICE[liquidsAll$CHOICE=="miss"] <- NA
 
 liquidsAll <- liquidsAll %>% filter(TARGET%in%c("control","target")) %>% droplevels %>% na.omit
 
+#liquidsAll$cons <- grep
+
 # liquidsL <- liquidsAll %>% filter(LIQUID=="L") %>% droplevels
 # liquidsR <- liquidsAll %>% filter(LIQUID=="R") %>% droplevels
 
 
-counts <- liquidsAll %>% group_by(LIQUID,C1C2,VOWEL,POSITION,LEXICAL,lang)%>%summarize(count=n()) %>% as.data.frame
+counts <- liquidsAll %>% group_by(LIQUID,VOWEL,POSITION,LEXICAL,lang)%>%
+  summarize(l=sum(CHOICE=='l'),
+          n=sum(CHOICE=='n'),
+          r=sum(CHOICE=='r'),
+          w=sum(CHOICE=='n')) %>%
+  as.data.frame
+
+countsBySubject <- liquidsAll %>% group_by(SUBJECT,LIQUID,VOWEL,POSITION,LEXICAL,lang)%>%
+  summarize(l=sum(CHOICE=='l'),
+            n=sum(CHOICE=='n'),
+            r=sum(CHOICE=='r'),
+            w=sum(CHOICE=='n')) %>%
+  as.data.frame
 
 counts1 <- liquidsAll %>% group_by(LIQUID,CHOICE) %>% summarize(count=n()) %>% as.data.frame
 
