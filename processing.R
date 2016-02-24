@@ -12,28 +12,41 @@ if(!is.installed(rethinking)){
 library(dplyr)
 
 
-cols_err <- c("SUBJECT","ANSWER","RESP","C1C2","CL_ONS","LEXICAL","LIQUID","POSITION","Running","TARGET","TYPE","VOWEL","CHOICE1","CHOICE2","CHOICE3","CHOICE4","CHOICE5")
-cols_cor <- c("SUBJECT","ANSWER","RESP","C1C2","CL_ONS","LEXICAL","LIQUID","POSITION","Running","TARGET","TYPE","VOWEL","CHOICE1","CHOICE2","CHOICE3","CHOICE4","CHOICE5")
+cols <- c("SUBJECT","NUMBER","BL","ANSWER","RESP","CHOICE","C1C2","LEXICAL","LIQUID","POSITION","VOWEL","CHOICE1","CHOICE2","CHOICE3","CHOICE4","NAME","TARGET")
 
-CNT_sg_err <- read.csv("CNT_ERR_SG.csv")[,cols_err]
-CNT_sg_cor <- read.csv("CNT_ERR_SG.csv")[,cols_cor]
-CNT_sg_cor$choice <- CNT_sg_cor$choice %>% as.character %>% tolower %>% as.factor
+CNT_sg_err <- read.csv("CNT_ERR_SG.csv")[,cols]
+CNT_sg_cor <- read.csv("CNT_COR_SG.csv")[,cols]
+CNT_sg_err$CHOICE <- CNT_sg_err$CHOICE %>% as.character %>% tolower %>% as.factor
+CNT_sg_cor$CHOICE <- CNT_sg_cor$CHOICE %>% as.character %>% tolower %>% as.factor
 CNT <- rbind(CNT_sg_err,CNT_sg_cor)
 CNT$lang <- "Cantonese"
 
-CNT_sg_err <- read.csv("CNT_ERR_SG.csv")[,cols_err]
-CNT_sg_cor <- read.csv("CNT_ERR_SG.csv")[,cols_cor]
-CNT_sg_cor$choice <- CNT_sg_cor$choice %>% as.character %>% as.factor
-CNT <- rbind(CNT_sg_err,CNT_sg_cor)
+MAN_sg_err <- read.csv("MAN_ERR_SG.csv")[,cols]
+MAN_sg_cor <- read.csv("MAN_COR_SG.csv")[,cols]
+MAN_sg_err$CHOICE <- MAN_sg_err$CHOICE %>% as.character %>% tolower %>% as.factor
+MAN_sg_cor$CHOICE <- MAN_sg_cor$CHOICE %>% as.character %>% tolower %>% as.factor
+MAN <- rbind(MAN_sg_err,MAN_sg_cor)
 MAN$lang <- "Mandarin"
 
 liquidsAll <- rbind(CNT,MAN)
 liquidsAll$lang <- as.factor(liquidsAll$lang)
+liquidsAll$CHOICE[liquidsAll$CHOICE=="miss"] <- NA
 
-liquidsAll <- liquidsAll %>% filter(TARGET%in%c("control","target"))
+liquidsAll <- liquidsAll %>% filter(TARGET%in%c("control","target")) %>% droplevels
 
-liquidsL <- liquidsAll %>% filter(LIQUID=="L")
-liquidsR <- liquidsAll %>% filter(LIQUID=="R")
+# liquidsL <- liquidsAll %>% filter(LIQUID=="L") %>% droplevels
+# liquidsR <- liquidsAll %>% filter(LIQUID=="R") %>% droplevels
+
+
+counts <- liquidsAll %>% group_by(LIQUID,C1C2,VOWEL,POSITION,LEXICAL,lang)%>%summarize(count=n()) %>% as.data.frame
+
+counts1 <- liquidsAll %>% group_by(LIQUID,CHOICE) %>% summarize(count=n()) %>% as.data.frame
+
+counts2 <- liquidsAll %>% group_by(LIQUID,CHOICE,C1C2) %>% summarize(count=n()) %>% as.data.frame
+
+counts3 <- liquidsAll %>% group_by(LIQUID,CHOICE,VOWEL) %>% summarize(count=n()) %>% as.data.frame
+
+counts4 <- liquidsAll %>% group_by(LIQUID,CHOICE,POSITION) %>% summarize(count=n()) %>% as.data.frame
 
 
 # stringDiff <- function(x,y){
