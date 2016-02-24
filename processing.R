@@ -1,7 +1,7 @@
 # Check for required packages, if not, run setup:
 is.installed <- function(mypkg) is.element(mypkg, installed.packages()[,1])
 # function found in this thread: http://r.789695.n4.nabble.com/test-if-a-package-is-installed-td1750671.html
-if(!is.installed(rethinking)){
+if(!is.installed("rethinking")){
   deps <- c("coda","mvtnorm","devtools")
   if(!all(is.installed(deps))){
     install.packages(deps[-is.installed(deps)])
@@ -32,7 +32,7 @@ liquidsAll <- rbind(CNT,MAN)
 liquidsAll$lang <- as.factor(liquidsAll$lang)
 liquidsAll$CHOICE[liquidsAll$CHOICE=="miss"] <- NA
 
-liquidsAll <- liquidsAll %>% filter(TARGET%in%c("control","target")) %>% droplevels
+liquidsAll <- liquidsAll %>% filter(TARGET%in%c("control","target")) %>% droplevels %>% na.omit
 
 # liquidsL <- liquidsAll %>% filter(LIQUID=="L") %>% droplevels
 # liquidsR <- liquidsAll %>% filter(LIQUID=="R") %>% droplevels
