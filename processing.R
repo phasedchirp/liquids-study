@@ -1,5 +1,6 @@
 # Check for required packages, if not, run setup:
 is.installed <- function(mypkg) is.element(mypkg, installed.packages()[,1])
+# function found in this thread: http://r.789695.n4.nabble.com/test-if-a-package-is-installed-td1750671.html
 if(!is.installed(rethinking)){
   deps <- c("coda","mvtnorm","devtools")
   if(!all(is.installed(deps))){
