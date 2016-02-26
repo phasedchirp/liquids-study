@@ -5,6 +5,7 @@ if(!is.installed("rethinking")){
   deps <- c("coda","mvtnorm","devtools")
   if(!all(is.installed(deps))){
     install.packages(deps[-is.installed(deps)])
+    library(devtools)
     devtools::install_github("rmcelreath/rethinking")
   }
 }
@@ -28,13 +29,19 @@ MAN_sg_cor$CHOICE <- MAN_sg_cor$CHOICE %>% as.character %>% tolower %>% as.facto
 MAN <- rbind(MAN_sg_err,MAN_sg_cor)
 MAN$lang <- "Mandarin"
 
+
 liquidsAll <- rbind(CNT,MAN)
-liquidsAll$lang <- as.factor(liquidsAll$lang)
 liquidsAll$CHOICE[liquidsAll$CHOICE=="miss"] <- NA
 
-liquidsAll <- liquidsAll %>% filter(TARGET%in%c("control","target")) %>% droplevels %>% na.omit
+liquidsAll <- liquidsAll %>%
+  filter(TARGET%in%c("control","target")) %>%
+  mutate(cons = ifelse(POSITION=="initial",substr(C1C2,3,3),tolower(substr(C1C2,1,1)))) %>%
+  droplevels %>% na.omit
 
-#liquidsAll$cons <- grep
+liquidsAll$cons <- as.factor(liquidsAll$cons)
+liquidsAll$lang <- as.factor(liquidsAll$lang)
+
+
 
 # liquidsL <- liquidsAll %>% filter(LIQUID=="L") %>% droplevels
 # liquidsR <- liquidsAll %>% filter(LIQUID=="R") %>% droplevels
