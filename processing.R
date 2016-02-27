@@ -47,27 +47,27 @@ liquidsAll$lang <- as.factor(liquidsAll$lang)
 # liquidsR <- liquidsAll %>% filter(LIQUID=="R") %>% droplevels
 
 
-counts <- liquidsAll %>% group_by(LIQUID,VOWEL,POSITION,LEXICAL,lang)%>%
-  summarize(l=sum(CHOICE=='l'),
-          n=sum(CHOICE=='n'),
-          r=sum(CHOICE=='r'),
-          w=sum(CHOICE=='n')) %>%
-  as.data.frame
+# counts <- liquidsAll %>% group_by(LIQUID,VOWEL,POSITION,LEXICAL,lang)%>%
+#   summarize(l=sum(CHOICE=='l'),
+#           n=sum(CHOICE=='n'),
+#           r=sum(CHOICE=='r'),
+#           w=sum(CHOICE=='n')) %>%
+#   as.data.frame
+# 
+# countsBySubject <- liquidsAll %>% group_by(SUBJECT,LIQUID,VOWEL,POSITION,LEXICAL,lang)%>%
+#   summarize(l=sum(CHOICE=='l'),
+#             n=sum(CHOICE=='n'),
+#             r=sum(CHOICE=='r'),
+#             w=sum(CHOICE=='n')) %>%
+#   as.data.frame
 
-countsBySubject <- liquidsAll %>% group_by(SUBJECT,LIQUID,VOWEL,POSITION,LEXICAL,lang)%>%
-  summarize(l=sum(CHOICE=='l'),
-            n=sum(CHOICE=='n'),
-            r=sum(CHOICE=='r'),
-            w=sum(CHOICE=='n')) %>%
-  as.data.frame
+# counts1 <- liquidsAll %>% group_by(LIQUID,CHOICE) %>% summarize(count=n()) %>% as.data.frame
 
-counts1 <- liquidsAll %>% group_by(LIQUID,CHOICE) %>% summarize(count=n()) %>% as.data.frame
+# counts2 <- liquidsAll %>% group_by(LIQUID,CHOICE,C1C2) %>% summarize(count=n()) %>% as.data.frame
 
-counts2 <- liquidsAll %>% group_by(LIQUID,CHOICE,C1C2) %>% summarize(count=n()) %>% as.data.frame
+# counts3 <- liquidsAll %>% group_by(LIQUID,CHOICE,VOWEL) %>% summarize(count=n()) %>% as.data.frame
 
-counts3 <- liquidsAll %>% group_by(LIQUID,CHOICE,VOWEL) %>% summarize(count=n()) %>% as.data.frame
-
-counts4 <- liquidsAll %>% group_by(LIQUID,CHOICE,POSITION) %>% summarize(count=n()) %>% as.data.frame
+# counts4 <- liquidsAll %>% group_by(LIQUID,CHOICE,POSITION) %>% summarize(count=n()) %>% as.data.frame
 
 
 # stringDiff <- function(x,y){
