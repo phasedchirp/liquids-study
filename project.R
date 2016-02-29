@@ -88,7 +88,7 @@ precis(modelL,depth=2)
 plot(precis(modelL,depth=2))
 
 newDat <- counts[,c("lID","Man","init","med","vI","vU")] %>% distinct(lID,Man,init,med,vI,vU) %>% arrange(lID,Man,med,vI)
-p <- link(modelL1,newDat)[c("lambda_l","lambda_n","lambda_r","lambda_w")]
+p <- link(modelL1,newDat,n=5000)[c("lambda_l","lambda_n","lambda_r","lambda_w")]
 
 # See McElreath (2016) p.327
 pSums <- with(p,lambda_l+lambda_n+lambda_r+lambda_w)
