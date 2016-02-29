@@ -43,8 +43,8 @@ liquidsAll$lang <- as.factor(liquidsAll$lang)
 
 
 
-# liquidsL <- liquidsAll %>% filter(LIQUID=="L") %>% droplevels
-# liquidsR <- liquidsAll %>% filter(LIQUID=="R") %>% droplevels
+liquidsL <- liquidsAll %>% filter(LIQUID=="L") %>% droplevels
+liquidsR <- liquidsAll %>% filter(LIQUID=="R") %>% droplevels
 
 
 # counts <- liquidsAll %>% group_by(LIQUID,VOWEL,POSITION,LEXICAL,lang)%>%
