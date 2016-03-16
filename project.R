@@ -11,23 +11,6 @@ library(rethinking)
 #round(xtabs(~CHOICE+VOWEL+lang,liquidsAll),2)
 
 
-counts <- liquidsAll %>% mutate(init = ifelse(POSITION=="initial",1,0),
-                                med = ifelse(POSITION=="medial",1,0),
-                                consID = as.numeric(cons),
-                                lID = as.numeric(LIQUID),
-                                Man = ifelse(lang=="Mandarin",1,0),
-                                pID = as.numeric(SUBJECT),
-                                vI = ifelse(VOWEL=="i",1,0),
-                                vU = ifelse(VOWEL=="u",1,0)) %>%
-  group_by(lID,Man,init,med,vI,vU) %>%
-  summarize(l=sum(CHOICE=='l'),
-            n=sum(CHOICE=='n'),
-            r=sum(CHOICE=='r'),
-            w=sum(CHOICE=='w'),
-            total=sum(l,n,r,w)) %>%
-  as.data.frame
-
-
 counts <- liquidsAll %>%
   filter(LIQUID == "L") %>%
   mutate(init = ifelse(POSITION=="initial",1,0),
