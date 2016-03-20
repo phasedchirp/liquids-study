@@ -42,10 +42,10 @@ model.1 <- alist(
   # Language effects:
   c(bMan_l, bMan_n, bMan_r, bMan_w) ~ dnorm(0,5),
   # Fun with random effects:
-  v_l ~ dnorm(0,sigma_l),
-  v_n ~ dnorm(0,sigma_n),
-  v_r ~ dnorm(0,sigma_r),
-  v_w ~ dnorm(0,sigma_w),
+  v_l[pID] ~ dnorm(0,sigma_l),
+  v_n[pID] ~ dnorm(0,sigma_n),
+  v_r[pID] ~ dnorm(0,sigma_r),
+  v_w[pID] ~ dnorm(0,sigma_w),
   c(sigma_l,sigma_n,sigma_r,sigma_w) ~ dcauchy(0,2)
 )
 
@@ -72,7 +72,7 @@ model.1 <- alist(
 # /l/ stimuli                                                                  #
 ################################################################################
 model.L <- map2stan(model.1, data = counts.subj.L,
-                    iter=5000,cores=4,chains=4,
+                    iter=8000,cores=4,chains=4,
                     control=list(max_treedepth=15,adapt_delta=0.95))
 plotFrame <- liquidsAll %>%
   filter(LIQUID=="L") %>%
