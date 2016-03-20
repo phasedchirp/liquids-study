@@ -22,32 +22,58 @@ model.1 <- alist(
   r ~ dpois(lambda_r) ,
   w ~ dpois(lambda_w) ,
   # Linear models:
-  log(lambda_l) <-  a_l + pos_l + bMan_l*Man, #+ v_l, #
-  log(lambda_n) <-  a_n + pos_n + bMan_n*Man , #+ v_n, #
-  log(lambda_r) <-  a_r + pos_r + bMan_r*Man , #+ v_r, #
-  log(lambda_w) <-  a_w + pos_w + bMan_w*Man , #+ v_w, #
+  log(lambda_l) <-  a_l + v_l + pos_l + bMan_l*Man, #+ v_l, #
+  log(lambda_n) <-  a_n + v_n + pos_n + bMan_n*Man , #+ v_n, #
+  log(lambda_r) <-  a_r + v_r + pos_r + bMan_r*Man , #+ v_r, #
+  log(lambda_w) <-  a_w + v_w + pos_w + bMan_w*Man , #+ v_w, #
   # Position:
   pos_l <- bInit_l*init + bMed_l*med,
   pos_n <- bInit_n*init + bMed_n*med,
   pos_r <- bInit_r*init + bMed_r*med,
   pos_w <- bInit_w*init + bMed_w*med,
   # Intercepts:
-  c(a_l,a_n,a_r,a_w) ~ dnorm(0,50),
+  a_l ~ dnorm(0,10),
+  a_n ~ dnorm(0,10),
+  a_r ~ dnorm(0,10),
+  a_w ~ dnorm(0,10),
   # Position effects:
   c(bInit_l, bInit_n, bInit_r, bInit_w) ~ dnorm(0,5),
   c(bMed_l, bMed_n, bMed_r, bMed_w) ~ dnorm(0,5),
   # Language effects:
-  c(bMan_l, bMan_n, bMan_r, bMan_w) ~ dnorm(0,5)
-  
+  c(bMan_l, bMan_n, bMan_r, bMan_w) ~ dnorm(0,5),
+  # Fun with random effects:
+  v_l ~ dnorm(0,sigma_l),
+  v_n ~ dnorm(0,sigma_n),
+  v_r ~ dnorm(0,sigma_r),
+  v_w ~ dnorm(0,sigma_w),
+  c(sigma_l,sigma_n,sigma_r,sigma_w) ~ dcauchy(0,2)
 )
+
+# alist(
+#   CHOICE ~ dnorm( mu , sigma ),
+#   mu <- Intercept +
+#     b_POSITIONinitial*POSITIONinitial +
+#     b_POSITIONmedial*POSITIONmedial +
+#     b_langMandarin*langMandarin +
+#     v_Intercept[SUBJECT] +
+#     v_POSITIONinitial[SUBJECT]*POSITIONinitial +
+#     v_POSITIONmedial[SUBJECT]*POSITIONmedial,
+#   Intercept ~ dnorm(0,10),
+#   b_POSITIONinitial ~ dnorm(0,10),
+#   b_POSITIONmedial ~ dnorm(0,10),
+#   b_langMandarin ~ dnorm(0,10),
+#   c(v_Intercept,v_POSITIONinitial,v_POSITIONmedial)[SUBJECT] ~ dmvnorm2(0,sigma_SUBJECT,Rho_SUBJECT),
+#   sigma_SUBJECT ~ dcauchy(0,2),
+#   Rho_SUBJECT ~ dlkjcorr(2),
+#   sigma ~ dcauchy(0,2))
 
 
 ################################################################################
 # /l/ stimuli                                                                  #
 ################################################################################
-model.L <- map2stan(model.1, data = counts.L,
+model.L <- map2stan(model.1, data = counts.subj.L,
                     iter=5000,cores=4,chains=4,
-                    control=list(max_treedepth=15,adapt_delta=0.9))
+                    control=list(max_treedepth=15,adapt_delta=0.95))
 plotFrame <- liquidsAll %>%
   filter(LIQUID=="L") %>%
   mutate(init = ifelse(POSITION=="initial",1,0),

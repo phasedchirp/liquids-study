@@ -47,27 +47,133 @@ liquidsL <- liquidsAll %>% filter(LIQUID=="L") %>% droplevels
 liquidsR <- liquidsAll %>% filter(LIQUID=="R") %>% droplevels
 
 
-# counts <- liquidsAll %>% group_by(LIQUID,VOWEL,POSITION,LEXICAL,lang)%>%
-#   summarize(l=sum(CHOICE=='l'),
-#           n=sum(CHOICE=='n'),
-#           r=sum(CHOICE=='r'),
-#           w=sum(CHOICE=='n')) %>%
-#   as.data.frame
-# 
-# countsBySubject <- liquidsAll %>% group_by(SUBJECT,LIQUID,VOWEL,POSITION,LEXICAL,lang)%>%
-#   summarize(l=sum(CHOICE=='l'),
-#             n=sum(CHOICE=='n'),
-#             r=sum(CHOICE=='r'),
-#             w=sum(CHOICE=='n')) %>%
-#   as.data.frame
+counts.L <- liquidsAll %>%
+  filter(LIQUID == "L") %>%
+  mutate(init = ifelse(POSITION=="initial",1,0),
+         med = ifelse(POSITION=="medial",1,0),
+         lID = as.numeric(LIQUID),
+         Man = ifelse(lang=="Mandarin",1,0),
+         pID = as.numeric(SUBJECT),
+         vI = ifelse(VOWEL=="i",1,0),
+         vU = ifelse(VOWEL=="u",1,0)) %>%
+  group_by(Man,init,med) %>%
+  summarize(l=sum(CHOICE=='l'),
+            n=sum(CHOICE=='n'),
+            r=sum(CHOICE=='r'),
+            w=sum(CHOICE=='w'),total=sum(l,n,r,w)) %>%
+  as.data.frame
 
-# counts1 <- liquidsAll %>% group_by(LIQUID,CHOICE) %>% summarize(count=n()) %>% as.data.frame
+counts.subj.L <- liquidsAll %>%
+  filter(LIQUID == "L") %>%
+  mutate(init = ifelse(POSITION=="initial",1,0),
+         med = ifelse(POSITION=="medial",1,0),
+         lID = as.numeric(LIQUID),
+         Man = ifelse(lang=="Mandarin",1,0),
+         pID = as.numeric(SUBJECT),
+         vI = ifelse(VOWEL=="i",1,0),
+         vU = ifelse(VOWEL=="u",1,0)) %>%
+  group_by(Man,init,med,pID) %>%
+  summarize(l=sum(CHOICE=='l'),
+            n=sum(CHOICE=='n'),
+            r=sum(CHOICE=='r'),
+            w=sum(CHOICE=='w'),total=sum(l,n,r,w)) %>%
+  as.data.frame
 
-# counts2 <- liquidsAll %>% group_by(LIQUID,CHOICE,C1C2) %>% summarize(count=n()) %>% as.data.frame
+counts.R <- liquidsAll %>%
+  filter(LIQUID == "R") %>%
+  mutate(init = ifelse(POSITION=="initial",1,0),
+         med = ifelse(POSITION=="medial",1,0),
+         lID = as.numeric(LIQUID),
+         Man = ifelse(lang=="Mandarin",1,0),
+         pID = as.numeric(SUBJECT),
+         vI = ifelse(VOWEL=="i",1,0),
+         vU = ifelse(VOWEL=="u",1,0)) %>%
+  group_by(Man,init,med) %>%
+  summarize(l=sum(CHOICE=='l'),
+            n=sum(CHOICE=='n'),
+            r=sum(CHOICE=='r'),
+            w=sum(CHOICE=='w'),total=sum(l,n,r,w)) %>%
+  as.data.frame
 
-# counts3 <- liquidsAll %>% group_by(LIQUID,CHOICE,VOWEL) %>% summarize(count=n()) %>% as.data.frame
+counts.subj.R <- liquidsAll %>%
+  filter(LIQUID == "R") %>%
+  mutate(init = ifelse(POSITION=="initial",1,0),
+         med = ifelse(POSITION=="medial",1,0),
+         lID = as.numeric(LIQUID),
+         Man = ifelse(lang=="Mandarin",1,0),
+         pID = as.numeric(SUBJECT),
+         vI = ifelse(VOWEL=="i",1,0),
+         vU = ifelse(VOWEL=="u",1,0)) %>%
+  group_by(Man,init,med,pID) %>%
+  summarize(l=sum(CHOICE=='l'),
+            n=sum(CHOICE=='n'),
+            r=sum(CHOICE=='r'),
+            w=sum(CHOICE=='w'),total=sum(l,n,r,w)) %>%
+  as.data.frame
 
-# counts4 <- liquidsAll %>% group_by(LIQUID,CHOICE,POSITION) %>% summarize(count=n()) %>% as.data.frame
+counts.W <- liquidsAll %>%
+  filter(LIQUID == "W") %>%
+  mutate(init = ifelse(POSITION=="initial",1,0),
+         med = ifelse(POSITION=="medial",1,0),
+         lID = as.numeric(LIQUID),
+         Man = ifelse(lang=="Mandarin",1,0),
+         pID = as.numeric(SUBJECT),
+         vI = ifelse(VOWEL=="i",1,0),
+         vU = ifelse(VOWEL=="u",1,0)) %>%
+  group_by(Man,init,med) %>%
+  summarize(l=sum(CHOICE=='l'),
+            n=sum(CHOICE=='n'),
+            r=sum(CHOICE=='r'),
+            w=sum(CHOICE=='w'),total=sum(l,n,r,w)) %>%
+  as.data.frame
+
+counts.subj.W <- liquidsAll %>%
+  filter(LIQUID == "W") %>%
+  mutate(init = ifelse(POSITION=="initial",1,0),
+         med = ifelse(POSITION=="medial",1,0),
+         lID = as.numeric(LIQUID),
+         Man = ifelse(lang=="Mandarin",1,0),
+         pID = as.numeric(SUBJECT),
+         vI = ifelse(VOWEL=="i",1,0),
+         vU = ifelse(VOWEL=="u",1,0)) %>%
+  group_by(Man,init,med,pID) %>%
+  summarize(l=sum(CHOICE=='l'),
+            n=sum(CHOICE=='n'),
+            r=sum(CHOICE=='r'),
+            w=sum(CHOICE=='w'),total=sum(l,n,r,w)) %>%
+  as.data.frame
+
+counts.N <- liquidsAll %>%
+  filter(LIQUID == "N") %>%
+  mutate(init = ifelse(POSITION=="initial",1,0),
+         med = ifelse(POSITION=="medial",1,0),
+         lID = as.numeric(LIQUID),
+         Man = ifelse(lang=="Mandarin",1,0),
+         pID = as.numeric(SUBJECT),
+         vI = ifelse(VOWEL=="i",1,0),
+         vU = ifelse(VOWEL=="u",1,0)) %>%
+  group_by(Man,init,med) %>%
+  summarize(l=sum(CHOICE=='l'),
+            n=sum(CHOICE=='n'),
+            r=sum(CHOICE=='r'),
+            w=sum(CHOICE=='w'),total=sum(l,n,r,w)) %>%
+  as.data.frame
+
+counts.subj.N <- liquidsAll %>%
+  filter(LIQUID == "N") %>%
+  mutate(init = ifelse(POSITION=="initial",1,0),
+         med = ifelse(POSITION=="medial",1,0),
+         lID = as.numeric(LIQUID),
+         Man = ifelse(lang=="Mandarin",1,0),
+         pID = as.numeric(SUBJECT),
+         vI = ifelse(VOWEL=="i",1,0),
+         vU = ifelse(VOWEL=="u",1,0)) %>%
+  group_by(Man,init,med,pID) %>%
+  summarize(l=sum(CHOICE=='l'),
+            n=sum(CHOICE=='n'),
+            r=sum(CHOICE=='r'),
+            w=sum(CHOICE=='w'),total=sum(l,n,r,w)) %>%
+  as.data.frame
 
 
 # stringDiff <- function(x,y){
